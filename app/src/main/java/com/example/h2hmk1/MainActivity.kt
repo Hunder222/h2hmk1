@@ -171,7 +171,7 @@ fun BreathingExercise(btnText: String, pText: String){
 }
 
 @Composable
-fun FakeCallSite() {
+fun FakeCall() {
     Column(modifier = Modifier.fillMaxSize()) {
         Title()
         Info()
