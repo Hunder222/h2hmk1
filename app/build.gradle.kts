@@ -36,6 +36,7 @@ android {
         compose = true
     }
 }
+val nav_version = "2.8.9"
 
 dependencies {
     implementation(libs.androidx.core.ktx)
@@ -54,4 +55,5 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation("androidx.navigation:navigation-compose:${nav_version}")
 }
