@@ -65,6 +65,9 @@ fun Navigator() {
         composable("tab-home"){
             TakeABreathHome()
         }
+        composable("fake-call"){
+            FakeCallSite()
+        }
     }
 }
 
