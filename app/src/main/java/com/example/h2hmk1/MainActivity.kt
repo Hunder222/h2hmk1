@@ -1,5 +1,6 @@
 package com.example.h2hmk1
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.dp
@@ -33,6 +35,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import coil.ImageLoader
+import coil.compose.AsyncImage
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import coil.request.ImageRequest
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -162,3 +169,54 @@ fun BreathingExercise(btnText: String, pText: String){
         )
     }
 }
+
+@Composable
+fun FakeCallSite() {
+    Column(modifier = Modifier.fillMaxSize()) {
+        Title()
+        Info()
+        GifImage()
+
+    }
+}
+
+@Composable
+fun Title() {
+    Text(
+        text = "Fake call"
+    )
+}
+
+@Composable
+fun Info() {
+    Text(
+        text = "Even when your app isn’t open, simply press the heart down for 3 seconds twice to have a fake number calling you."
+    )
+}
+
+
+
+@Composable
+fun GifImage() {
+
+    val context = LocalContext.current
+
+    val imageLoader = ImageLoader.Builder(context)
+        .components {
+            if (Build.VERSION.SDK_INT >= 28) {
+                add(ImageDecoderDecoder.Factory())
+            } else {
+                add(GifDecoder.Factory())
+            }
+        }
+        .build()
+
+    AsyncImage(
+        model = ImageRequest.Builder(context)
+            .data(R.drawable.giphy)
+            .build(),
+        imageLoader = imageLoader,
+        contentDescription = "gif"
+    )
+}
+
