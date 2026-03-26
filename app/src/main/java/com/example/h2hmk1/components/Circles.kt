@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun circlesHome() {
     Text(
-        "Dette er home",
+        "Dette er Elliot",
         fontSize = 40.sp,
         modifier = Modifier
             .padding(30.dp)
