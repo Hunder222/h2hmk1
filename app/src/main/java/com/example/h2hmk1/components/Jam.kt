@@ -1,3 +1,4 @@
+
 package com.example.h2hmk1.components
 
 import androidx.compose.foundation.layout.padding
@@ -8,9 +9,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun circlesHome() {
+fun JamHome() {
     Text(
-        "Dette er circles",
+        "Dette er jam",
         fontSize = 40.sp,
         modifier = Modifier
             .padding(30.dp)
