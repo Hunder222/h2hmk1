@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun JamHome() {
     Text(
-        "Dette er home",
+        "Dette er jam",
         fontSize = 40.sp,
         modifier = Modifier
             .padding(30.dp)
