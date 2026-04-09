@@ -160,32 +160,41 @@ fun CameraScreen() {
 fun JamJoinInput() {
     var jamCodeInput by remember { mutableStateOf("") }
 
-    TextField(
-        value = jamCodeInput,
-        label = { Text("Jam code") },
-        modifier = Modifier.fillMaxWidth(),
-        onValueChange = { jamCodeInput = it }
-    )
-
-    Button(colors = ButtonDefaults.buttonColors(
-        containerColor = Color(0xFFFFFFFF),
-        contentColor = Color(0xFFFE77B7)
-    ),
+    Row (
         modifier = Modifier
-            .padding(top = 15.dp)
-            .shadow(
-                elevation = 3.dp,
-                shape = CircleShape,
-                ambientColor = Color.Black.copy(alpha = 0.3f),
-                spotColor = Color.Black
-            ), onClick = {
-        if (jamCodeInput.isNotBlank()) {
+            .fillMaxWidth()
+            .padding(20.dp)
+    ) {
 
-            jamCodeInput = ""
+        TextField(
+            value = jamCodeInput,
+            label = { Text("Jam code") },
+            modifier = Modifier,
+            onValueChange = { jamCodeInput = it }
+        )
 
+        Spacer(modifier = Modifier.width(20.dp))
+
+        Button(
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFFFFFFF),
+                contentColor = Color(0xFFFE77B7)
+            ),
+            modifier = Modifier
+                .padding(top = 15.dp)
+                .shadow(
+                    elevation = 3.dp,
+                    shape = CircleShape,
+                    ambientColor = Color.Black.copy(alpha = 0.3f),
+                    spotColor = Color.Black
+                ), onClick = {
+                if (jamCodeInput.isNotBlank()) {
+
+                    jamCodeInput = ""
+
+                }
+            }) {
+            Text("Join")
         }
-    }) {
-        Text("Join")
     }
-
 }
