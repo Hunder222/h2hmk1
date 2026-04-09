@@ -29,6 +29,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AddCircleOutline
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -36,8 +40,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,11 +55,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.Vector
 import kotlin.math.log
 
 @Composable
@@ -150,33 +158,56 @@ fun CircleList(
         }
 
         // Bottom buttons
-        Row(
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-        ) {
-            ContactListBtn(
-                btnText = "More Settings",
-                btnImageId = R.drawable.ic_launcher_foreground,
-                modifier = Modifier.weight(3f),
-                onPressAction = {/*TODO*/}
-            )
+        CircleListSettingsBar(
+            onExpandClick = { onExpandClick( !isListExtended ) }
+        )
+    }
+}
 
-            ContactListBtn(
-                btnImageId = R.drawable.ic_launcher_foreground,
-                modifier = Modifier.weight(1f),
-                onPressAction = { onExpandClick( !isListExtended ) }
-            )
 
-            ContactListBtn(
-                btnText = "Add to Circle",
-                btnImageId = R.drawable.ic_launcher_foreground,
-                modifier = Modifier.weight(3f),
-                onPressAction = {/*TODO*/}
-            )
-        }
+@Composable
+fun CircleListSettingsBar(
+    onExpandClick: () -> Unit
+){
+    Row(
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .background(h2hPink)
+    ) {
+        ContactListBtn(
+            btnText = "More Settings",
+            btnIcon = Icons.Rounded.MoreHoriz,
+            modifier = Modifier.weight(3f),
+            onPressAction = {/*TODO*/}
+        )
+
+        VerticalDivider(
+            color = Color.White,
+            modifier = Modifier.height(25.dp),
+            thickness = 2.dp
+        )
+
+        ContactListBtn(
+            btnIcon = Icons.Rounded.KeyboardArrowUp,
+            modifier = Modifier.weight(1f),
+            onPressAction = onExpandClick
+        )
+
+        VerticalDivider(
+            color = Color.White,
+            modifier = Modifier.height(25.dp),
+            thickness = 2.dp
+        )
+
+        ContactListBtn(
+            btnText = "Add to Circle",
+            btnIcon = Icons.Rounded.AddCircleOutline,
+            modifier = Modifier.weight(3f),
+            onPressAction = {/*TODO*/}
+        )
     }
 }
 
@@ -184,7 +215,7 @@ fun CircleList(
 @Composable
 fun ContactListBtn(
     btnText: String = "",
-    btnImageId: Int,
+    btnIcon: ImageVector,
     modifier: Modifier,
     onPressAction: () -> Unit
 ){
@@ -192,8 +223,6 @@ fun ContactListBtn(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .background(h2hPink)
-            .border(1.dp, h2hPink)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
@@ -201,20 +230,25 @@ fun ContactListBtn(
                 onPressAction()
             }
     ) {
-        Image(
-            painter = painterResource(btnImageId),
-            contentDescription = "Avatar of contact",
+        Icon(
+            imageVector = btnIcon,
+            contentDescription = "Settings",
+            tint = Color.White,
             modifier = Modifier
                 .padding(vertical = 2.dp)
         )
-        if (btnText != "") Text(btnText)
+        if (btnText != "") Text(
+            btnText,
+            color = Color.White,
+            modifier = Modifier.padding(start = 5.dp)
+        )
     }
 }
 
 
 @Composable
 fun ContactListItem(
-    contactName: String = "Lorem"
+    contactName: String
 ){
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -239,15 +273,18 @@ fun ContactListItem(
                 .padding(10.dp)
                 .weight(1f)
         )
-        Button(
-            onClick = { /* TODO */ },
-            colors = ButtonDefaults.buttonColors(Color.Transparent)
-        ) {
-            Text(
-                "•••",
-                color = Color.Black,
-                fontSize = 20.sp)
-        }
+
+        Icon(
+            imageVector = Icons.Rounded.MoreHoriz,
+            contentDescription = "More settings for ${contactName}",
+            modifier = Modifier
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    /*TODO*/
+                }
+        )
     }
     HorizontalDivider(
         thickness = 1.dp,
