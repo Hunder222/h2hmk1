@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -16,15 +16,16 @@ import com.example.h2hmk1.components.FakeCall
 import com.example.h2hmk1.components.PremiumHome
 import com.example.h2hmk1.components.TakeABreathHome
 
+@Preview
 @Composable
-fun Navigator(name : String) {
+fun Navigator(name : String = "Lorem") {
     val navController = rememberNavController()
 
     Text(
         text = "Hej ${name}!",
         fontSize = 36.sp,
         modifier = Modifier
-            .padding(top = 50.dp, start = 30.dp)
+            .padding(top = 50.dp)
     )
 
     NavHost(navController = navController, startDestination = "premium-home") {
@@ -32,7 +33,7 @@ fun Navigator(name : String) {
             PremiumHome (
                 onBtn1Click = {navController.navigate("fake-call")},
                 onBtn2Click = {navController.navigate("tab-home")},
-                onBtn3Click = {navController.navigate("circles-home")}
+                onBtn3Click = {navController.navigate("circles")}
             )
         }
         composable("tab-home"){
@@ -41,12 +42,8 @@ fun Navigator(name : String) {
         composable("fake-call"){
             FakeCall()
         }
-        composable("circles-home"){
-            CirclesHome(
-                createCircleBtn = {print("ellooo")},
-                createJamBtn = {print("dereeeeeee")},
-                joinJamBtn = {print("hoooomannnn")}
-            )
+        composable("circles"){
+            circlesHome()
         }
     }
 }

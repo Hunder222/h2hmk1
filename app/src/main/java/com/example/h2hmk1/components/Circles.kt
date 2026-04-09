@@ -78,11 +78,7 @@ fun circlesHome() {
 val h2hPink: Color = Color(0xFFFE77B7)
 
 val circleContactsList: MutableList<String> = mutableListOf(
-    "Lorem Ipsum",
-    "Dolor Sit Amet",
-    "Consectetur Adipisici",
-    "Sed Eiusmod",
-    "Tempor Incidunt"
+
 )
 
 
