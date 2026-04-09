@@ -273,7 +273,7 @@ fun JamCreate() {
 
         Text(
             "Current jammers:",
-            fontSize = 20.sp,
+            fontSize = 25.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(horizontal = 60.dp)
@@ -305,7 +305,7 @@ fun JamCreate() {
                         Text(
                             text = member.nickname,
                             color = Color(0xFFFE77B7),
-                            fontSize = 16.sp
+                            fontSize = 18.sp
                         )
                     }
 
