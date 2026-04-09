@@ -41,7 +41,12 @@ fun Navigator(name : String) {
             FakeCall()
         }
         composable("circles"){
-            circlesHome()
+            circlesHome(
+                {navController.navigate("jam")}
+            )
+        }
+        composable("jam"){
+            JamJoin()
         }
     }
 }
