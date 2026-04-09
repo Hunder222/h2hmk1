@@ -10,14 +10,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -32,41 +43,113 @@ fun CirclesHome(
         modifier = Modifier
             .padding(30.dp)
     ) {
+        CirclesHeader()
+        MyCircles(
+            createCircleBtn
+        )
+        Jams(
+            createJamBtn,
+            joinJamBtn
+        )
+
+    }
+}
+
+@Composable
+fun CirclesHeader() {
+    Text(
+        "Circles",
+        fontSize = 40.sp,
+        modifier = Modifier
+            .padding(bottom = 10.dp)
+    )
+
+    Text(
+        "Your friends and loved ones, specify which people you need and when",
+        color = Color(0XFFA3A3A3),
+        fontSize = 20.sp
+    )
+}
+
+@Composable
+fun MyCircles(
+    createCircleBtn: () -> Unit
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 30.dp)
+    ) {
         Text(
-            "Circles",
-            fontSize = 40.sp,
+            "My circles",
+            fontSize = 30.sp,
+            modifier = Modifier
+                .padding(top = 20.dp)
+
+        )
+
+        Button(
+            onClick = createCircleBtn,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFFFFFFF),
+                contentColor = Color(0xFFFE77B7)
+            ),
+            modifier = Modifier
+                .padding(top = 15.dp)
+                .shadow(
+                    elevation = 3.dp,
+                    shape = CircleShape,
+                    ambientColor = Color.Black.copy(alpha = 0.3f),
+                    spotColor = Color.Black
+                )
+        ) {
+            Text(
+                "New"
+            )
+
+
+        }
+    }
+}
+
+@Composable
+fun Jams(
+    createJamBtn: () -> Unit,
+    joinJamBtn: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .padding(top = 100.dp)
+    ) {
+        Text(
+            "Jams",
+            fontSize = 30.sp,
             modifier = Modifier
                 .padding(bottom = 10.dp)
         )
 
         Text(
-            "Your friends and loved ones, specify which people you need and when",
+            "Your temporary circle",
             color = Color(0XFFA3A3A3),
-            fontSize = 20.sp
+            fontSize = 20.sp,
+            modifier = Modifier
+                .padding(bottom = 20.dp)
         )
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 30.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                "My circles",
-                fontSize = 30.sp,
-                modifier = Modifier
-                    .padding(top = 20.dp)
-
-            )
-
             Button(
-                onClick = createCircleBtn,
+                onClick = createJamBtn,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFFFFFF),
-                    contentColor = Color(0xFFFE77B7)
+                    containerColor = Color(0xFFFE77B7)
                 ),
                 modifier = Modifier
-                    .padding(top = 15.dp)
+                    .width(150.dp)
                     .shadow(
                         elevation = 3.dp,
                         shape = CircleShape,
@@ -75,76 +158,28 @@ fun CirclesHome(
                     )
             ) {
                 Text(
-                    "New"
+                    "Create a jam"
                 )
-
-
             }
-        }
 
-        Column(
-            modifier = Modifier
-                .padding(top = 100.dp)
-        ) {
-            Text(
-                "Jams",
-                fontSize = 30.sp,
+            Button(
+                onClick = joinJamBtn,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFFE77B7)
+                ),
                 modifier = Modifier
-                    .padding(bottom = 10.dp)
-            )
-
-            Text(
-                "Your temporary circle",
-                color = Color(0XFFA3A3A3),
-                fontSize = 20.sp,
-                modifier = Modifier
-                    .padding(bottom = 20.dp)
-            )
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(top = 20.dp)
+                    .width(150.dp)
+                    .shadow(
+                        elevation = 3.dp,
+                        shape = CircleShape,
+                        ambientColor = Color.Black.copy(alpha = 0.3f),
+                        spotColor = Color.Black
+                    )
             ) {
-                Button(
-                    onClick = createJamBtn,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFE77B7)
-                    ),
-                    modifier = Modifier
-                        .width(150.dp)
-                        .shadow(
-                            elevation = 3.dp,
-                            shape = CircleShape,
-                            ambientColor = Color.Black.copy(alpha = 0.3f),
-                            spotColor = Color.Black
-                        )
-                ) {
-                    Text(
-                        "Create a jam"
-                    )
-                }
-
-                Button(
-                    onClick = joinJamBtn,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFE77B7)
-                    ),
-                    modifier = Modifier
-                        .padding(top = 20.dp)
-                        .width(150.dp)
-                        .shadow(
-                            elevation = 3.dp,
-                            shape = CircleShape,
-                            ambientColor = Color.Black.copy(alpha = 0.3f),
-                            spotColor = Color.Black
-                        )
-                ) {
-                    Text(
-                        "Join a jam"
-                    )
-                }
+                Text(
+                    "Join a jam"
+                )
             }
         }
     }
