@@ -29,9 +29,13 @@ import androidx.navigation.compose.rememberNavController
 import com.example.h2hmk1.components.FakeCall
 import com.example.h2hmk1.components.PremiumHome
 import com.example.h2hmk1.components.TakeABreathHome
+import com.example.h2hmk1.viewmodels.h2hViewmodel
+import com.example.h2hmk1.viewmodels.Screen
 
 @Composable
-fun Navigator() {
+fun Navigator(viewModel: h2hViewmodel) {
+
+
     val navController = rememberNavController()
 
     TopNav(navController)
@@ -47,8 +51,11 @@ fun Navigator() {
         composable("tab-home"){
             TakeABreathHome()
         }
-        composable("fake-call"){
-            FakeCall()
+        composable("fake-call") {
+            FakeCall(viewModel, navController)
+        }
+        composable("friends") {
+            FriendsScreen(viewModel, navController)
         }
         composable("circles-home"){
             CirclesHome(
