@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -23,7 +24,7 @@ fun Navigator(name : String) {
         text = "Hej ${name}!",
         fontSize = 36.sp,
         modifier = Modifier
-            .padding(top = 50.dp)
+            .padding(top = 50.dp, start = 30.dp)
     )
 
     NavHost(navController = navController, startDestination = "premium-home") {
@@ -31,7 +32,7 @@ fun Navigator(name : String) {
             PremiumHome (
                 onBtn1Click = {navController.navigate("fake-call")},
                 onBtn2Click = {navController.navigate("tab-home")},
-                onBtn3Click = {navController.navigate("circles")}
+                onBtn3Click = {navController.navigate("circles-home")}
             )
         }
         composable("tab-home"){
@@ -40,8 +41,12 @@ fun Navigator(name : String) {
         composable("fake-call"){
             FakeCall()
         }
-        composable("circles"){
-            circlesHome()
+        composable("circles-home"){
+            CirclesHome(
+                createCircleBtn = {print("ellooo")},
+                createJamBtn = {print("dereeeeeee")},
+                joinJamBtn = {print("hoooomannnn")}
+            )
         }
     }
 }
