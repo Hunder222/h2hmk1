@@ -75,274 +75,277 @@ fun circlesHome() {
 }
 
 
-val h2hPink: Color = Color(0xFFFE77B7)
-
-val circleContactsList: MutableList<String> = mutableListOf(
-
-)
-
-
-
-
-@Preview
-@Composable
-fun CircleListPREVIEW(){
-    var isListExtended by remember { mutableStateOf(true) }
-
-    CircleList(
-        circleName = "Placeholder Circle",
-        contactsList = circleContactsList,
-        isListExtended = isListExtended,
-        onExpandClick = {isListExtended = it}
-    )
-}
-
-
-@Composable
-fun CircleList(
-    circleName: String = "Hello World",
-    contactsList: MutableList<String>,
-    isListExtended: Boolean,
-    onExpandClick: (Boolean) -> Unit
-) {
-    val amountOfContacts = contactsList.size
-
-    var isSwitchActive by remember { mutableStateOf(false) }
-
-    val listHeight by animateDpAsState(
-        targetValue = if (isListExtended) 90.dp + (50.dp * amountOfContacts) else 50.dp
-    )
-
-    Card(
-        shape = RoundedCornerShape(25.dp),
-        colors = CardDefaults.cardColors( containerColor = Color.White ),
-        modifier = Modifier
-            .height(listHeight)
-            .fillMaxWidth()
-            .border(3.dp, h2hPink, RoundedCornerShape(25.dp))
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) {
-                onExpandClick( !isListExtended )
-            }
-    ) {
-        // List header
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(47.dp)
-                .padding(start = 15.dp, end = 10.dp, top = 3.dp)
-        ) {
-            Text(circleName, fontSize = 20.sp)
-            ToggleSwitch(
-                isChecked = isSwitchActive,
-                onSwitchPressed = { isSwitchActive = it }
-            )
-        }
-
-        HorizontalDivider(
-            thickness = 2.dp,
-            color = h2hPink
-        )
-
-        // Contacts list
-        contactsList.forEach { contact ->
-            ContactListItem(contact)
-        }
-
-        // Bottom buttons
-        CircleListSettingsBar(
-            onExpandClick = { onExpandClick( !isListExtended ) }
-        )
-    }
-}
-
-
-@Composable
-fun CircleListSettingsBar(
-    onExpandClick: () -> Unit
-){
-    Row(
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .background(h2hPink)
-    ) {
-        ContactListBtn(
-            btnText = "More Settings",
-            btnIcon = Icons.Rounded.MoreHoriz,
-            modifier = Modifier.weight(3f),
-            onPressAction = {/*TODO*/}
-        )
-
-        VerticalDivider(
-            color = Color.White,
-            modifier = Modifier.height(25.dp),
-            thickness = 2.dp
-        )
-
-        ContactListBtn(
-            btnIcon = Icons.Rounded.KeyboardArrowUp,
-            modifier = Modifier.weight(1f),
-            onPressAction = onExpandClick
-        )
-
-        VerticalDivider(
-            color = Color.White,
-            modifier = Modifier.height(25.dp),
-            thickness = 2.dp
-        )
-
-        ContactListBtn(
-            btnText = "Add to Circle",
-            btnIcon = Icons.Rounded.AddCircleOutline,
-            modifier = Modifier.weight(3f),
-            onPressAction = {/*TODO*/}
-        )
-    }
-}
-
-
-@Composable
-fun ContactListBtn(
-    btnText: String = "",
-    btnIcon: ImageVector,
-    modifier: Modifier,
-    onPressAction: () -> Unit
-){
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) {
-                onPressAction()
-            }
-    ) {
-        Icon(
-            imageVector = btnIcon,
-            contentDescription = "Settings",
-            tint = Color.White,
-            modifier = Modifier
-                .padding(vertical = 2.dp)
-        )
-        if (btnText != "") Text(
-            btnText,
-            color = Color.White,
-            modifier = Modifier.padding(start = 5.dp)
-        )
-    }
-}
-
-
-@Composable
-fun ContactListItem(
-    contactName: String
-){
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .padding(start = 15.dp, end = 15.dp)
-    ) {
-        Image(
-            painter = painterResource(R.drawable.ic_launcher_foreground),
-            contentDescription = "Avatar of contact",
-            modifier = Modifier
-                .padding(vertical = 2.dp)
-                .clip(CircleShape)
-                .background(Color.LightGray)
-        )
-
-        Text(
-            contactName,
-            fontSize = 18.sp,
-            modifier = Modifier
-                .padding(10.dp)
-                .weight(1f)
-        )
-
-        Icon(
-            imageVector = Icons.Rounded.MoreHoriz,
-            contentDescription = "More settings for ${contactName}",
-            modifier = Modifier
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
-                ) {
-                    /*TODO*/
-                }
-        )
-    }
-    HorizontalDivider(
-        thickness = 1.dp,
-        color = h2hPink
-    )
-}
+//val h2hPink: Color = Color(0xFFFE77B7)
+//
+//val circleContactsList: MutableList<String> = mutableListOf(
+//    "Lorem",
+//    "Ipsum",
+//    "Dolor",
+//    "Sit Amet"
+//)
 
 
 
-
-
-
-
-
-
-
-@Preview
-@Composable
-fun ToggleSwitchPREVIEW(){
-    var isSwitchActive by remember { mutableStateOf(false) }
-
-    ToggleSwitch(
-        isChecked = isSwitchActive,
-        onSwitchPressed = { isSwitchActive = it }
-    )
-}
-
-@Composable
-fun ToggleSwitch(
-    isChecked: Boolean,
-    onSwitchPressed: (Boolean) -> Unit
-){
-    val switchBgColor by animateColorAsState(
-        targetValue = if (isChecked) h2hPink else Color.White
-    )
-    val switchNubColor by animateColorAsState(
-        targetValue = if (isChecked) Color.White else h2hPink
-    )
-    val nubOffset by animateDpAsState(
-        targetValue = if (isChecked) 35.dp else 0.dp
-    )
-
-    Box(
-        modifier = Modifier
-            .size(width = 70.dp, height = 35.dp)
-            .clip(CircleShape)
-            .border(width = 2.dp, color = h2hPink, shape = CircleShape)
-            .background(color = switchBgColor)
-            .padding(2.dp)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) {
-                onSwitchPressed( !isChecked )
-            }
-    ) {
-        Box(
-            modifier = Modifier
-                .offset(nubOffset)
-                .size(35.dp-(2.dp*2))
-                .clip(CircleShape)
-                .background(switchNubColor)
-        ){ }
-    }
-}
+//
+//@Preview
+//@Composable
+//fun CircleListPREVIEW(){
+//    var isListExtended by remember { mutableStateOf(true) }
+//
+//    CircleList(
+//        circleName = "Placeholder Circle",
+//        contactsList = circleContactsList,
+//        isListExtended = isListExtended,
+//        onExpandClick = {isListExtended = it}
+//    )
+//}
+//
+//
+//@Composable
+//fun CircleList(
+//    circleName: String = "Hello World",
+//    contactsList: MutableList<String>,
+//    isListExtended: Boolean,
+//    onExpandClick: (Boolean) -> Unit
+//) {
+//    val amountOfContacts = contactsList.size
+//
+//    var isSwitchActive by remember { mutableStateOf(false) }
+//
+//    val listHeight by animateDpAsState(
+//        targetValue = if (isListExtended) 90.dp + (50.dp * amountOfContacts) else 50.dp
+//    )
+//
+//    Card(
+//        shape = RoundedCornerShape(25.dp),
+//        colors = CardDefaults.cardColors( containerColor = Color.White ),
+//        modifier = Modifier
+//            .height(listHeight)
+//            .fillMaxWidth()
+//            .border(3.dp, h2hPink, RoundedCornerShape(25.dp))
+//            .clickable(
+//                interactionSource = remember { MutableInteractionSource() },
+//                indication = null
+//            ) {
+//                onExpandClick( !isListExtended )
+//            }
+//    ) {
+//        // List header
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.SpaceBetween,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(47.dp)
+//                .padding(start = 15.dp, end = 10.dp, top = 3.dp)
+//        ) {
+//            Text(circleName, fontSize = 20.sp)
+//            ToggleSwitch(
+//                isChecked = isSwitchActive,
+//                onSwitchPressed = { isSwitchActive = it }
+//            )
+//        }
+//
+//        HorizontalDivider(
+//            thickness = 2.dp,
+//            color = h2hPink
+//        )
+//
+//        // Contacts list
+//        contactsList.forEach { contact ->
+//            ContactListItem(contact)
+//        }
+//
+//        // Bottom buttons
+//        CircleListSettingsBar(
+//            onExpandClick = { onExpandClick( !isListExtended ) }
+//        )
+//    }
+//}
+//
+//
+//@Composable
+//fun CircleListSettingsBar(
+//    onExpandClick: () -> Unit
+//){
+//    Row(
+//        horizontalArrangement = Arrangement.SpaceAround,
+//        verticalAlignment = Alignment.CenterVertically,
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .fillMaxHeight()
+//            .background(h2hPink)
+//    ) {
+//        ContactListBtn(
+//            btnText = "More Settings",
+//            btnIcon = Icons.Rounded.MoreHoriz,
+//            modifier = Modifier.weight(3f),
+//            onPressAction = {/*TODO*/}
+//        )
+//
+//        VerticalDivider(
+//            color = Color.White,
+//            modifier = Modifier.height(25.dp),
+//            thickness = 2.dp
+//        )
+//
+//        ContactListBtn(
+//            btnIcon = Icons.Rounded.KeyboardArrowUp,
+//            modifier = Modifier.weight(1f),
+//            onPressAction = onExpandClick
+//        )
+//
+//        VerticalDivider(
+//            color = Color.White,
+//            modifier = Modifier.height(25.dp),
+//            thickness = 2.dp
+//        )
+//
+//        ContactListBtn(
+//            btnText = "Add to Circle",
+//            btnIcon = Icons.Rounded.AddCircleOutline,
+//            modifier = Modifier.weight(3f),
+//            onPressAction = {/*TODO*/}
+//        )
+//    }
+//}
+//
+//
+//@Composable
+//fun ContactListBtn(
+//    btnText: String = "",
+//    btnIcon: ImageVector,
+//    modifier: Modifier,
+//    onPressAction: () -> Unit
+//){
+//    Row(
+//        horizontalArrangement = Arrangement.Center,
+//        verticalAlignment = Alignment.CenterVertically,
+//        modifier = modifier
+//            .clickable(
+//                interactionSource = remember { MutableInteractionSource() },
+//                indication = null
+//            ) {
+//                onPressAction()
+//            }
+//    ) {
+//        Icon(
+//            imageVector = btnIcon,
+//            contentDescription = "Settings",
+//            tint = Color.White,
+//            modifier = Modifier
+//                .padding(vertical = 2.dp)
+//        )
+//        if (btnText != "") Text(
+//            btnText,
+//            color = Color.White,
+//            modifier = Modifier.padding(start = 5.dp)
+//        )
+//    }
+//}
+//
+//
+//@Composable
+//fun ContactListItem(
+//    contactName: String
+//){
+//    Row(
+//        verticalAlignment = Alignment.CenterVertically,
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .height(50.dp)
+//            .padding(start = 15.dp, end = 15.dp)
+//    ) {
+//        Image(
+//            painter = painterResource(R.drawable.ic_launcher_foreground),
+//            contentDescription = "Avatar of contact",
+//            modifier = Modifier
+//                .padding(vertical = 2.dp)
+//                .clip(CircleShape)
+//                .background(Color.LightGray)
+//        )
+//
+//        Text(
+//            contactName,
+//            fontSize = 18.sp,
+//            modifier = Modifier
+//                .padding(10.dp)
+//                .weight(1f)
+//        )
+//
+//        Icon(
+//            imageVector = Icons.Rounded.MoreHoriz,
+//            contentDescription = "More settings for ${contactName}",
+//            modifier = Modifier
+//                .clickable(
+//                    interactionSource = remember { MutableInteractionSource() },
+//                    indication = null
+//                ) {
+//                    /*TODO*/
+//                }
+//        )
+//    }
+//    HorizontalDivider(
+//        thickness = 1.dp,
+//        color = h2hPink
+//    )
+//}
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@Preview
+//@Composable
+//fun ToggleSwitchPREVIEW(){
+//    var isSwitchActive by remember { mutableStateOf(false) }
+//
+//    ToggleSwitch(
+//        isChecked = isSwitchActive,
+//        onSwitchPressed = { isSwitchActive = it }
+//    )
+//}
+//
+//@Composable
+//fun ToggleSwitch(
+//    isChecked: Boolean,
+//    onSwitchPressed: (Boolean) -> Unit
+//){
+//    val switchBgColor by animateColorAsState(
+//        targetValue = if (isChecked) h2hPink else Color.White
+//    )
+//    val switchNubColor by animateColorAsState(
+//        targetValue = if (isChecked) Color.White else h2hPink
+//    )
+//    val nubOffset by animateDpAsState(
+//        targetValue = if (isChecked) 35.dp else 0.dp
+//    )
+//
+//    Box(
+//        modifier = Modifier
+//            .size(width = 70.dp, height = 35.dp)
+//            .clip(CircleShape)
+//            .border(width = 2.dp, color = h2hPink, shape = CircleShape)
+//            .background(color = switchBgColor)
+//            .padding(2.dp)
+//            .clickable(
+//                interactionSource = remember { MutableInteractionSource() },
+//                indication = null
+//            ) {
+//                onSwitchPressed( !isChecked )
+//            }
+//    ) {
+//        Box(
+//            modifier = Modifier
+//                .offset(nubOffset)
+//                .size(35.dp-(2.dp*2))
+//                .clip(CircleShape)
+//                .background(switchNubColor)
+//        ){ }
+//    }
+//}
