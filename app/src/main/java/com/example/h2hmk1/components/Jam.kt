@@ -43,10 +43,12 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -60,7 +62,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 fun JamJoin() {
     Column {
         Text(
-            "Get your friends to scan this to join your jam or have them type in the code in their app",
+            "Get your jam host or friend already in the jam to show you the QR to join or put in the code that is on their screen",
             color = Color(0XFFA3A3A3),
             fontSize = 20.sp,
             modifier = Modifier
@@ -164,24 +166,42 @@ fun JamJoinInput() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp)
+        ,verticalAlignment = Alignment.CenterVertically
     ) {
 
         TextField(
             value = jamCodeInput,
+            onValueChange = { jamCodeInput = it },
             label = { Text("Jam code") },
-            modifier = Modifier,
-            onValueChange = { jamCodeInput = it }
+            modifier = Modifier
+                .width(220.dp)
+                .shadow(
+                    elevation = 3.dp,
+                    shape = CircleShape
+                ),
+            shape = CircleShape,
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+
+                focusedIndicatorColor = Color(0xFFFE77B7),
+                unfocusedIndicatorColor = Color(0xFFFE77B7).copy(alpha = 0.5f),
+
+                cursorColor = Color(0xFFFE77B7),
+
+                focusedLabelColor = Color(0xFFFE77B7),
+                unfocusedLabelColor = Color.Gray
+            )
         )
 
         Spacer(modifier = Modifier.width(20.dp))
 
         Button(
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFFFFFFF),
-                contentColor = Color(0xFFFE77B7)
-            ),
+            containerColor = Color(0xFFFE77B7)
+        ),
             modifier = Modifier
-                .padding(top = 15.dp)
+                .width(100.dp)
                 .shadow(
                     elevation = 3.dp,
                     shape = CircleShape,
@@ -197,4 +217,67 @@ fun JamJoinInput() {
             Text("Join")
         }
     }
+}
+
+
+
+@Composable
+fun JamCreate() {
+    Column {
+        Text(
+            "Get your friends to scan this to join your jam or have them type in the code in their app.",
+            color = Color(0XFFA3A3A3),
+            fontSize = 20.sp,
+            modifier = Modifier
+                .padding(30.dp)
+        )
+
+        Image(
+            painter = painterResource(R.drawable.pinkqr),
+            contentDescription = "QR-code",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(50.dp)
+                .aspectRatio(1f),
+            contentScale = ContentScale.Crop
+        )
+
+
+        Text(
+            "2KPT4N",
+            color = Color(0xFFFE77B7),
+            fontSize = 30.sp,
+            modifier = Modifier
+                .padding(30.dp)
+        )
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        class JamContact (val nickname: String, val profileID: Int){
+        }
+
+        val me: JamContact = JamContact("Rosalina (You)",1)
+
+        var jamMemberList: MutableList<JamContact> = mutableListOf(me)
+
+
+
+
+        Text(
+            "Current jammers:",
+            fontSize = 20.sp,
+            modifier = Modifier
+                .padding(30.dp)
+        )
+
+
+
+        Column {
+            jamMemberList.forEach {
+                Text(it.nickname)
+            }
+        }
+
+    }
+
 }
