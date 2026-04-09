@@ -180,6 +180,7 @@ fun CircleList(
     }
 }
 
+
 @Composable
 fun ContactListBtn(
     btnText: String = "",
@@ -191,6 +192,7 @@ fun ContactListBtn(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
+            .background(h2hPink)
             .border(1.dp, h2hPink)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -205,12 +207,9 @@ fun ContactListBtn(
             modifier = Modifier
                 .padding(vertical = 2.dp)
         )
-        Text(btnText)
+        if (btnText != "") Text(btnText)
     }
 }
-
-
-
 
 
 @Composable
