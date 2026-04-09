@@ -46,7 +46,7 @@ fun Navigator(name : String) {
             )
         }
         composable("jam"){
-            JamJoin()
+            JamCreate()
         }
     }
 }

@@ -42,6 +42,7 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -54,6 +55,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -229,7 +231,8 @@ fun JamCreate() {
             color = Color(0XFFA3A3A3),
             fontSize = 20.sp,
             modifier = Modifier
-                .padding(30.dp)
+                .padding(horizontal = 30.dp)
+                .padding(vertical = 7.dp)
         )
 
         Image(
@@ -237,18 +240,23 @@ fun JamCreate() {
             contentDescription = "QR-code",
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(50.dp)
+                .padding(horizontal = 50.dp)
+                .padding(vertical = 7.dp)
                 .aspectRatio(1f),
             contentScale = ContentScale.Crop
         )
 
 
         Text(
-            "2KPT4N",
+            "2KPT4N55",
             color = Color(0xFFFE77B7),
             fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding(30.dp)
+                .padding(horizontal = 30.dp)
+                .padding(vertical = 7.dp)
+                .align(Alignment.CenterHorizontally)
+
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -266,18 +274,46 @@ fun JamCreate() {
         Text(
             "Current jammers:",
             fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding(30.dp)
+                .padding(horizontal = 60.dp)
+                .padding(vertical = 7.dp)
         )
 
 
 
         Column {
-            jamMemberList.forEach {
-                Text(it.nickname)
+            Column {
+                jamMemberList.forEach { member ->
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 30.dp, vertical = 6.dp)
+                            .shadow(
+                                elevation = 3.dp,
+                                shape = CircleShape,
+                                ambientColor = Color.Black.copy(alpha = 0.3f),
+                                spotColor = Color.Black
+                            )
+                            .background(
+                                color = Color.White,
+                                shape = CircleShape
+                            )
+                            .padding(vertical = 12.dp, horizontal = 20.dp)
+                    ) {
+                        Text(
+                            text = member.nickname,
+                            color = Color(0xFFFE77B7),
+                            fontSize = 16.sp
+                        )
+                    }
+
+                }
             }
+        }
         }
 
     }
 
-}
+
