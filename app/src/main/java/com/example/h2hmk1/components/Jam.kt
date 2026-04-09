@@ -46,6 +46,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -57,6 +58,7 @@ fun JamJoin() {
     Column {
         Text(
             "Get your friends to scan this to join your jam or have them type in the code in their app",
+            color = Color(0XFFA3A3A3),
             fontSize = 20.sp,
             modifier = Modifier
                 .padding(30.dp)
