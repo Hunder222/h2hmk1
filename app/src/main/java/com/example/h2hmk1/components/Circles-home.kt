@@ -3,6 +3,7 @@ package com.example.h2hmk1.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,11 +11,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -34,7 +41,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun CirclesHome(
-    createCircleBtn: () -> Unit,
+    newCircleBtn: () -> Unit,
     createJamBtn: () -> Unit,
     joinJamBtn: () -> Unit
 
@@ -45,13 +52,149 @@ fun CirclesHome(
     ) {
         CirclesHeader()
         MyCircles(
-            createCircleBtn
+            newCircleBtn
         )
         Jams(
             createJamBtn,
             joinJamBtn
         )
 
+    }
+}
+
+@Composable
+fun CirclePopupLayout(
+    createCircleBtn: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Icon(
+            imageVector = Icons.Default.DragHandle,
+            contentDescription = "Drag handle"
+        )
+        Text(
+            "Create Circle Name"
+        )
+
+        var circleName by remember { mutableStateOf("") }
+        OutlinedTextField(
+            value = circleName,
+            onValueChange = { circleName = it },
+            placeholder = {
+                Text("Enter name...", color = Color.Black)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .shadow(elevation = 5.dp, shape = RoundedCornerShape(50.dp)),
+            shape = RoundedCornerShape(50.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                focusedBorderColor = Color(0xFFFE77B7),
+                unfocusedBorderColor = Color(0xFFFFB6C1),
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black
+            ),
+            singleLine = true
+        )
+    }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 200.dp)
+    ) {
+
+        Button(
+            onClick = createCircleBtn,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFFE77B7),
+                contentColor = Color(0xFFFFFFFF)
+            ),
+            modifier = Modifier
+                .shadow(
+                    elevation = 3.dp,
+                    shape = CircleShape,
+                    ambientColor = Color.Black.copy(alpha = 0.3f),
+                    spotColor = Color.Black
+                )
+        ) {
+            Text(
+                "Create circle"
+            )
+        }
+    }
+}
+@Preview
+@Composable
+fun ContactPopupLayout(
+    addContactBtn: () -> Unit = {}
+){
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Icon(
+            imageVector = Icons.Default.DragHandle,
+            contentDescription = "Drag handle"
+        )
+        Text(
+            "Add your contacts to your circle!"
+        )
+
+        var contactName by remember { mutableStateOf("") }
+        OutlinedTextField(
+            value = contactName,
+            onValueChange = { contactName = it },
+            placeholder = {
+                Text("e.g. Kathrine...", color = Color.Black)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .shadow(elevation = 5.dp, shape = RoundedCornerShape(50.dp)),
+            shape = RoundedCornerShape(50.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                focusedBorderColor = Color(0xFFFE77B7),
+                unfocusedBorderColor = Color(0xFFFFB6C1),
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black
+            ),
+            singleLine = true
+        )
+    }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 200.dp)
+    ) {
+
+        Button(
+            onClick = addContactBtn,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFFE77B7),
+                contentColor = Color(0xFFFFFFFF)
+            ),
+            modifier = Modifier
+                .shadow(
+                    elevation = 3.dp,
+                    shape = CircleShape,
+                    ambientColor = Color.Black.copy(alpha = 0.3f),
+                    spotColor = Color.Black
+                )
+        ) {
+            Text(
+                "Add contact"
+            )
+        }
     }
 }
 
@@ -73,7 +216,7 @@ fun CirclesHeader() {
 
 @Composable
 fun MyCircles(
-    createCircleBtn: () -> Unit
+    newCircleBtn: () -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -90,7 +233,7 @@ fun MyCircles(
         )
 
         Button(
-            onClick = createCircleBtn,
+            onClick = newCircleBtn,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFFFFFFF),
                 contentColor = Color(0xFFFE77B7)

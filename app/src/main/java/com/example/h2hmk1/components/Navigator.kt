@@ -43,10 +43,16 @@ fun Navigator(name : String) {
         }
         composable("circles-home"){
             CirclesHome(
-                createCircleBtn = {print("ellooo")},
+                newCircleBtn = {navController.navigate("new-circle-popup")},
                 createJamBtn = {print("dereeeeeee")},
                 joinJamBtn = {print("hoooomannnn")}
             )
         }
+        composable("new-circle-popup"){
+            CirclePopupLayout(
+                createCircleBtn = {}
+            )
+        }
+
     }
 }
