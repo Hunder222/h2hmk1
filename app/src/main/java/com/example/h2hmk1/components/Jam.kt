@@ -43,9 +43,12 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -164,7 +167,18 @@ fun JamJoinInput() {
         onValueChange = { jamCodeInput = it }
     )
 
-    Button(onClick = {
+    Button(colors = ButtonDefaults.buttonColors(
+        containerColor = Color(0xFFFFFFFF),
+        contentColor = Color(0xFFFE77B7)
+    ),
+        modifier = Modifier
+            .padding(top = 15.dp)
+            .shadow(
+                elevation = 3.dp,
+                shape = CircleShape,
+                ambientColor = Color.Black.copy(alpha = 0.3f),
+                spotColor = Color.Black
+            ), onClick = {
         if (jamCodeInput.isNotBlank()) {
 
             jamCodeInput = ""
