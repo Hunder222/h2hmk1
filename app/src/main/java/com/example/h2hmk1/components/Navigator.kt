@@ -29,9 +29,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.h2hmk1.components.FakeCall
 import com.example.h2hmk1.components.PremiumHome
 import com.example.h2hmk1.components.TakeABreathHome
+import com.example.h2hmk1.viewmodels.h2hViewmodel
 
 @Composable
-fun Navigator() {
+fun Navigator(
+    viewmodel: h2hViewmodel
+) {
     val navController = rememberNavController()
 
     TopNav(navController)
@@ -52,6 +55,7 @@ fun Navigator() {
         }
         composable("circles-home"){
             CirclesHome(
+                viewmodel,
                 createCircleBtn = {print("ellooo")},
                 createJamBtn = {navController.navigate("jam-create")},
                 joinJamBtn = {navController.navigate("jam-join")}

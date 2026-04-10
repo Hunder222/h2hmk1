@@ -57,6 +57,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.h2hmk1.R
+import com.example.h2hmk1.viewmodels.h2hViewmodel
 
 
 val h2hPink: Color = Color(0xFFFE77B7)
@@ -77,10 +78,27 @@ val circle2ContactsList: MutableList<String> = mutableListOf(
 )
 
 
+fun testCircles(
+    viewmodel: h2hViewmodel
+){
+    viewmodel.createCircle("Family")
+
+    circle1ContactsList.forEach { contact ->
+        viewmodel.circles[0].friends.add(contact)
+    }
+
+    viewmodel.createCircle("Bestiessss <3")
+
+    circle2ContactsList.forEach { contact ->
+        viewmodel.circles[1].friends.add(contact)
+    }
+}
+
 
 
 @Composable
 fun CirclesHome(
+    viewmodel: h2hViewmodel,
     createCircleBtn: () -> Unit,
     createJamBtn: () -> Unit,
     joinJamBtn: () -> Unit
@@ -92,6 +110,7 @@ fun CirclesHome(
     ) {
         CirclesHeader()
         MyCircles(
+            viewmodel,
             createCircleBtn
         )
         Jams(
@@ -123,6 +142,7 @@ fun CirclesHeader() {
 
 @Composable
 fun MyCircles(
+    viewmodel: h2hViewmodel,
     createCircleBtn: () -> Unit
 ) {
     Row(
@@ -163,24 +183,46 @@ fun MyCircles(
         }
     }
 
-    var isList1Extended by remember { mutableStateOf(false) }
+    if (viewmodel.circles.isEmpty()) {
+        Button(
+            onClick = {testCircles(viewmodel)}
+        ) {
+            Text("Test")
+        }
+    }
 
-    CircleList(
-        circleName = "Family",
-        contactsList = circle1ContactsList,
-        isListExtended = isList1Extended,
-        onExpandClick = { isList1Extended = it }
-    )
+
+    viewmodel.circles.forEach { circle ->
+        CircleList(
+            circleName = circle.name,
+            contactsList = circle.friends,
+            isListExtended = circle.isListExtended.value,
+            onExpandClick = { circle.isListExtended.value = it }
+        )
+    }
 
 
-    var isList2Extended by remember { mutableStateOf(false) }
 
-    CircleList(
-        circleName = "Besties 4 Ever",
-        contactsList = circle2ContactsList,
-        isListExtended = isList2Extended,
-        onExpandClick = { isList2Extended = it }
-    )
+
+
+//    var isList1Extended by remember { mutableStateOf(false) }
+//
+//    CircleList(
+//        circleName = "Family",
+//        contactsList = circle1ContactsList,
+//        isListExtended = isList1Extended,
+//        onExpandClick = { isList1Extended = it }
+//    )
+//
+//
+//    var isList2Extended by remember { mutableStateOf(false) }
+//
+//    CircleList(
+//        circleName = "Besties 4 Ever",
+//        contactsList = circle2ContactsList,
+//        isListExtended = isList2Extended,
+//        onExpandClick = { isList2Extended = it }
+//    )
 }
 
 
@@ -483,7 +525,7 @@ fun Jams(
             .padding(top = 100.dp)
     ) {
         Text(
-            "Jams",
+            "Jam",
             fontSize = 30.sp,
             modifier = Modifier
                 .padding(bottom = 10.dp)
