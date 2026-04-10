@@ -58,7 +58,7 @@ fun Navigator(
         composable("circles-home"){
             CirclesHome(
                 viewmodel,
-                createCircleBtn = {navController.navigate("new-circle-popup")},
+                newCircleBtn = {navController.navigate("new-circle-popup")},
                 createJamBtn = {navController.navigate("jam-create")},
                 joinJamBtn = {navController.navigate("jam-join")}
             )
