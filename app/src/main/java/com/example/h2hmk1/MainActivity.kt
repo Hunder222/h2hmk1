@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
             val viewModel: h2hViewmodel = viewModel()
             Column {
 
-                Navigator()
+                Navigator(viewModel)
 
             }
         }

@@ -1,8 +1,10 @@
 package com.example.h2hmk1.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
@@ -42,8 +44,16 @@ fun PremiumHome(
                 .padding(20.dp),
 
             ) {
-            Text("Fake call")
-            Text("Your safety, your terms. Trigger a realistic call from a chosen fake contact to create a quick, natural exit from situations that don’t feel right.")
+            Text(
+                "Fake call",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                "Your safety, your terms. Trigger a realistic call from a chosen fake contact to create a quick, natural exit from situations that don’t feel right.",
+                fontSize = 18.sp
+            )
             Button(onClick = onBtn1Click,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFFE77B7),
