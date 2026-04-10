@@ -48,8 +48,11 @@ fun Navigator() {
             TakeABreathHome()
         }
         composable("fake-call"){
-            FakeCall()
+            FakeCall(
+                onBackClick = { navController.popBackStack() }
+            )
         }
+
         composable("circles-home"){
             CirclesHome(
                 createCircleBtn = {print("ellooo")},
@@ -78,7 +81,7 @@ fun TopNav(
             .padding(top = 20.dp)
             .fillMaxWidth()
             .height(50.dp)
-    ) {
+    )  {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
