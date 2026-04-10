@@ -87,7 +87,7 @@ fun FakeCall(
                 Button(
                     onClick = onBackClick,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFE77B7)
+                        containerColor = h2hPink
                     ),
                     modifier = Modifier
                         .padding(top = 20.dp)

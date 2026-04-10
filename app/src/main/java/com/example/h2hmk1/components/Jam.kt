@@ -186,12 +186,12 @@ fun JamJoinInput() {
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color.White,
 
-                focusedIndicatorColor = Color(0xFFFE77B7),
-                unfocusedIndicatorColor = Color(0xFFFE77B7).copy(alpha = 0.5f),
+                focusedIndicatorColor = h2hPink,
+                unfocusedIndicatorColor = h2hPink.copy(alpha = 0.5f),
 
-                cursorColor = Color(0xFFFE77B7),
+                cursorColor = h2hPink,
 
-                focusedLabelColor = Color(0xFFFE77B7),
+                focusedLabelColor = h2hPink,
                 unfocusedLabelColor = Color.Gray
             )
         )
@@ -200,7 +200,7 @@ fun JamJoinInput() {
 
         Button(
             colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFFE77B7)
+            containerColor = h2hPink
         ),
             modifier = Modifier
                 .width(100.dp)
@@ -249,7 +249,7 @@ fun JamCreate() {
 
         Text(
             "2KPT4N55",
-            color = Color(0xFFFE77B7),
+            color = h2hPink,
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
@@ -304,7 +304,7 @@ fun JamCreate() {
                     ) {
                         Text(
                             text = member.nickname,
-                            color = Color(0xFFFE77B7),
+                            color = h2hPink,
                             fontSize = 18.sp
                         )
                     }

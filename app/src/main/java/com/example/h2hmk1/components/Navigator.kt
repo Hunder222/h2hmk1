@@ -106,7 +106,7 @@ fun TopNav(
             Icon(
                 imageVector = Icons.Rounded.ArrowBackIosNew,
                 contentDescription = "Back",
-                tint = Color(0xFFd086b3),
+                tint = h2hPink,
                 modifier = Modifier
                     .padding(start = 15.dp)
                     .size(35.dp, 35.dp)
@@ -115,7 +115,7 @@ fun TopNav(
                 text = "Back",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color(0xFFd086b3)
+                color = h2hPink
             )
         }
 

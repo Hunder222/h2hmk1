@@ -1,5 +1,6 @@
 package com.example.h2hmk1.components
 
+import android.R.attr.top
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -42,8 +43,31 @@ fun PremiumHome(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp),
-
             ) {
+            Text("Circles",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold)
+            Text("You can create circles for your friends and family to easily toggle your contact group that can send messages when you’re in need.",
+                fontSize = 18.sp)
+            Button(onClick = onBtn3Click,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = h2hPink,
+                    contentColor = Color(0xFFFFFFFF)
+                ),
+                modifier = Modifier
+                    .padding(top = 10.dp, bottom = 25.dp, start = 10.dp)
+                    .shadow(
+                        elevation = 3.dp,
+                        shape = CircleShape,
+                        ambientColor = Color.Black.copy(alpha = 0.3f),
+                        spotColor = Color.Black
+                    )
+            ) {
+                Text("Go to circles")
+            }
+
+
+
             Text(
                 "Fake call",
                 fontSize = 20.sp,
@@ -56,11 +80,11 @@ fun PremiumHome(
             )
             Button(onClick = onBtn1Click,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFE77B7),
+                    containerColor = h2hPink,
                     contentColor = Color(0xFFFFFFFF)
                 ),
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(top = 10.dp, bottom = 25.dp, start = 10.dp)
                     .shadow(
                     elevation = 3.dp,
                     shape = CircleShape,
@@ -70,15 +94,20 @@ fun PremiumHome(
                 Text("Fake call customization")
             }
 
-            Text("Take a breath")
-            Text("Guided breathing helps calm your body and mind by slowing your breath and regaining control of your nervous system. Even just a few minutes can make a noticable shift in how you feel.")
+
+
+            Text("Take a breath",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold)
+            Text("Guided breathing helps calm your body and mind by slowing your breath and regaining control of your nervous system. Even just a few minutes can make a noticable shift in how you feel.",
+                fontSize = 18.sp)
             Button(onClick = onBtn2Click,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFE77B7),
+                    containerColor = h2hPink,
                     contentColor = Color(0xFFFFFFFF)
                 ),
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(top = 10.dp, bottom = 25.dp, start = 10.dp)
                     .shadow(
                         elevation = 3.dp,
                         shape = CircleShape,
@@ -86,25 +115,6 @@ fun PremiumHome(
                         spotColor = Color.Black
                     )) {
                 Text("Take a breath")
-            }
-
-            Text("Circles")
-            Text("You can create circles for your friends and family to easily toggle your contact group that can send messages when you’re in need.")
-            Button(onClick = onBtn3Click,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFE77B7),
-                    contentColor = Color(0xFFFFFFFF)
-                ),
-                modifier = Modifier
-                    .padding(10.dp)
-                    .shadow(
-                        elevation = 3.dp,
-                        shape = CircleShape,
-                        ambientColor = Color.Black.copy(alpha = 0.3f),
-                        spotColor = Color.Black
-                    )
-            ) {
-                Text("Go to circles")
             }
         }
     }

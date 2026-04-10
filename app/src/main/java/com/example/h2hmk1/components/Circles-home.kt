@@ -57,7 +57,7 @@ import com.example.h2hmk1.R
 import com.example.h2hmk1.viewmodels.h2hViewmodel
 
 
-val h2hPink: Color = Color(0xFFFE77B7)
+val h2hPink: Color = Color(0xFFd086b3)
 
 val circle1ContactsList: MutableList<String> = mutableListOf(
     "Mette",
@@ -295,7 +295,7 @@ fun MyCircles(
             onClick = newCircleBtn,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFFFFFFF),
-                contentColor = Color(0xFFFE77B7)
+                contentColor = h2hPink
             ),
             modifier = Modifier
                 .padding(top = 15.dp)
@@ -658,7 +658,7 @@ fun Jams(
             Button(
                 onClick = createJamBtn,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFE77B7)
+                    containerColor = h2hPink
                 ),
                 modifier = Modifier
                     .width(150.dp)
@@ -677,7 +677,7 @@ fun Jams(
             Button(
                 onClick = joinJamBtn,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFE77B7)
+                    containerColor = h2hPink
                 ),
                 modifier = Modifier
                     .padding(top = 20.dp)
