@@ -121,8 +121,9 @@ fun CirclesHome(
 
 @Composable
 fun CirclePopupLayout(
-    createCircleBtn: () -> Unit
+    viewmodel: h2hViewmodel
 ) {
+    var circleName by remember { mutableStateOf("") }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -136,7 +137,7 @@ fun CirclePopupLayout(
             "Create Circle Name"
         )
 
-        var circleName by remember { mutableStateOf("") }
+
         OutlinedTextField(
             value = circleName,
             onValueChange = { circleName = it },
@@ -151,7 +152,7 @@ fun CirclePopupLayout(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color.White,
-                focusedBorderColor = Color(0xFFFE77B7),
+                focusedBorderColor = h2hPink,
                 unfocusedBorderColor = Color(0xFFFFB6C1),
                 focusedTextColor = Color.Black,
                 unfocusedTextColor = Color.Black
@@ -167,9 +168,13 @@ fun CirclePopupLayout(
     ) {
 
         Button(
-            onClick = createCircleBtn,
+            onClick = {
+                viewmodel.createCircle(circleName)
+                circleName = ""
+
+            },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFFE77B7),
+                containerColor = h2hPink,
                 contentColor = Color(0xFFFFFFFF)
             ),
             modifier = Modifier
@@ -186,6 +191,7 @@ fun CirclePopupLayout(
         }
     }
 }
+
 @Preview
 @Composable
 fun ContactPopupLayout(
@@ -219,7 +225,7 @@ fun ContactPopupLayout(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color.White,
-                focusedBorderColor = Color(0xFFFE77B7),
+                focusedBorderColor = h2hPink,
                 unfocusedBorderColor = Color(0xFFFFB6C1),
                 focusedTextColor = Color.Black,
                 unfocusedTextColor = Color.Black

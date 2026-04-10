@@ -72,7 +72,7 @@ fun Navigator(
         }
         composable("new-circle-popup"){
             CirclePopupLayout(
-                createCircleBtn = {}
+                viewmodel
             )
         }
 
