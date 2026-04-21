@@ -32,19 +32,25 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -53,11 +59,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.h2hmk1.R
+import com.example.h2hmk1.viewmodels.Circle
 import com.example.h2hmk1.viewmodels.h2hViewmodel
 
 
 val h2hPink: Color = Color(0xFFd086b3)
+val h2hRemoveRed: Color = Color(0xFFAF4848)
 
 val circle1ContactsList: MutableList<String> = mutableListOf(
     "Mette",
@@ -93,27 +102,121 @@ fun testCircles(
 
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CirclesHome(
     viewmodel: h2hViewmodel,
-    newCircleBtn: () -> Unit,
     createJamBtn: () -> Unit,
     joinJamBtn: () -> Unit
-
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .padding(30.dp)
-    ) {
-        item {
-            CirclesHeader()
-            MyCircles(
-                viewmodel,
-                newCircleBtn
-            )
-            Jams(
-                createJamBtn,
-                joinJamBtn
+    var showCirclePopup by remember { mutableStateOf(false) }
+    var showContactPopup by remember { mutableStateOf(false) }
+    var showContactSettingsPopup by remember { mutableStateOf(false) }
+    var showCircleSettingsPopup by remember { mutableStateOf(false) }
+    var showRenameCirclePopup by remember { mutableStateOf(false) }
+    
+    var selectedContactName by remember { mutableStateOf("") }
+    
+    val sheetState = rememberModalBottomSheetState()
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(30.dp)
+        ) {
+            item {
+                CirclesHeader()
+                MyCircles(
+                    viewmodel,
+                    newCircleBtn = { showCirclePopup = true },
+                    onAddContactClick = { showContactPopup = true },
+                    onContactSettingsClick = { contactName, circle ->
+                        viewmodel.selectedCircle = circle
+                        selectedContactName = contactName
+                        showContactSettingsPopup = true
+                    },
+                    onCircleSettingsClick = { circle ->
+                        viewmodel.selectedCircle = circle
+                        showCircleSettingsPopup = true
+                    }
+                )
+                Jams(
+                    createJamBtn,
+                    joinJamBtn
+                )
+            }
+        }
+
+        if (showCirclePopup) {
+            ModalBottomSheet(
+                onDismissRequest = { showCirclePopup = false },
+                sheetState = sheetState,
+                containerColor = Color.White
+            ) {
+                CirclePopupLayout(
+                    viewmodel = viewmodel,
+                    onCircleCreated = { showCirclePopup = false }
+                )
+            }
+        }
+
+        if (showContactPopup) {
+            ModalBottomSheet(
+                onDismissRequest = { showContactPopup = false },
+                sheetState = rememberModalBottomSheetState(),
+                containerColor = Color.White
+            ) {
+                ContactPopupLayout(
+                    viewmodel = viewmodel,
+                    onContactAdded = { showContactPopup = false }
+                )
+            }
+        }
+
+        if (showContactSettingsPopup) {
+            ModalBottomSheet(
+                onDismissRequest = { showContactSettingsPopup = false },
+                sheetState = rememberModalBottomSheetState(),
+                containerColor = Color.White
+            ) {
+                ContactSettingsPopupLayout(
+                    contactName = selectedContactName,
+                    onRemoveClick = {
+                        viewmodel.selectedCircle?.friends?.remove(selectedContactName)
+                        showContactSettingsPopup = false
+                    }
+                )
+            }
+        }
+
+        if (showCircleSettingsPopup) {
+            ModalBottomSheet(
+                onDismissRequest = { showCircleSettingsPopup = false },
+                sheetState = rememberModalBottomSheetState(),
+                containerColor = Color.White
+            ) {
+                CircleSettingsPopupLayout(
+                    circleName = viewmodel.selectedCircle?.name ?: "",
+                    onRenameClick = {
+                        showCircleSettingsPopup = false
+                        showRenameCirclePopup = true
+                    },
+                    onRemoveClick = {
+                        viewmodel.selectedCircle?.let { viewmodel.circles.remove(it) }
+                        showCircleSettingsPopup = false
+                    }
+                )
+            }
+        }
+
+        if (showRenameCirclePopup) {
+            RenameCirclePopup(
+                currentName = viewmodel.selectedCircle?.name ?: "",
+                onDismiss = { showRenameCirclePopup = false },
+                onSubmit = { newName ->
+                    viewmodel.selectedCircle?.name = newName
+                    showRenameCirclePopup = false
+                }
             )
         }
     }
@@ -121,20 +224,20 @@ fun CirclesHome(
 
 @Composable
 fun CirclePopupLayout(
-    viewmodel: h2hViewmodel
+    viewmodel: h2hViewmodel,
+    onCircleCreated: () -> Unit = {}
 ) {
     var circleName by remember { mutableStateOf("") }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
+            .padding(bottom = 50.dp, start = 20.dp, end = 20.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.DragHandle,
-            contentDescription = "Drag handle"
-        )
         Text(
-            "Create Circle Name"
+            "Create Circle Name",
+            fontSize = 20.sp,
+            modifier = Modifier.padding(vertical = 10.dp)
         )
 
 
@@ -146,7 +249,7 @@ fun CirclePopupLayout(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
+                .padding(10.dp)
                 .shadow(elevation = 5.dp, shape = RoundedCornerShape(50.dp)),
             shape = RoundedCornerShape(50.dp),
             colors = OutlinedTextFieldDefaults.colors(
@@ -159,25 +262,21 @@ fun CirclePopupLayout(
             ),
             singleLine = true
         )
-    }
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 200.dp)
-    ) {
 
         Button(
             onClick = {
-                viewmodel.createCircle(circleName)
-                circleName = ""
-
+                if (circleName.isNotBlank()) {
+                    viewmodel.createCircle(circleName)
+                    circleName = ""
+                    onCircleCreated()
+                }
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = h2hPink,
                 contentColor = Color(0xFFFFFFFF)
             ),
             modifier = Modifier
+                .padding(top = 10.dp)
                 .shadow(
                     elevation = 3.dp,
                     shape = CircleShape,
@@ -190,27 +289,28 @@ fun CirclePopupLayout(
             )
         }
     }
+
 }
 
-@Preview
 @Composable
 fun ContactPopupLayout(
-    addContactBtn: () -> Unit = {}
+    viewmodel: h2hViewmodel,
+    onContactAdded: () -> Unit = {}
 ){
+    var contactName by remember { mutableStateOf("") }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
+            .padding(bottom = 50.dp, start = 20.dp, end = 20.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.DragHandle,
-            contentDescription = "Drag handle"
-        )
         Text(
-            "Add your contacts to your circle!"
+            "Add your contacts to your circle!",
+            fontSize = 20.sp,
+            modifier = Modifier.padding(vertical = 10.dp)
         )
 
-        var contactName by remember { mutableStateOf("") }
         OutlinedTextField(
             value = contactName,
             onValueChange = { contactName = it },
@@ -219,7 +319,7 @@ fun ContactPopupLayout(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
+                .padding(10.dp)
                 .shadow(elevation = 5.dp, shape = RoundedCornerShape(50.dp)),
             shape = RoundedCornerShape(50.dp),
             colors = OutlinedTextFieldDefaults.colors(
@@ -232,21 +332,20 @@ fun ContactPopupLayout(
             ),
             singleLine = true
         )
-    }
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 200.dp)
-    ) {
 
         Button(
-            onClick = addContactBtn,
+            onClick = {
+                if (contactName.isNotBlank()) {
+                    viewmodel.selectedCircle?.friends?.add(contactName)
+                    onContactAdded()
+                }
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFFE77B7),
                 contentColor = Color(0xFFFFFFFF)
             ),
             modifier = Modifier
+                .padding(top = 10.dp)
                 .shadow(
                     elevation = 3.dp,
                     shape = CircleShape,
@@ -257,6 +356,153 @@ fun ContactPopupLayout(
             Text(
                 "Add contact"
             )
+        }
+    }
+}
+
+@Composable
+fun ContactSettingsPopupLayout(
+    contactName: String,
+    onRemoveClick: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 50.dp, start = 20.dp, end = 20.dp)
+    ) {
+        Text(
+            text = "Settings for $contactName",
+            fontSize = 20.sp,
+            modifier = Modifier.padding(vertical = 10.dp)
+        )
+
+        Button(
+            onClick = onRemoveClick,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = h2hRemoveRed,
+                contentColor = Color.White
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+                .shadow(
+                    elevation = 3.dp,
+                    shape = CircleShape,
+                    ambientColor = Color.Black.copy(alpha = 0.3f),
+                    spotColor = Color.Black
+                )
+        ) {
+            Text("Remove contact")
+        }
+    }
+}
+
+@Composable
+fun CircleSettingsPopupLayout(
+    circleName: String,
+    onRenameClick: () -> Unit,
+    onRemoveClick: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 50.dp, start = 20.dp, end = 20.dp)
+    ) {
+        Text(
+            text = "Settings for $circleName",
+            fontSize = 20.sp,
+            modifier = Modifier.padding(vertical = 10.dp)
+        )
+
+        Button(
+            onClick = onRenameClick,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = h2hPink,
+                contentColor = Color.White
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+                .shadow(
+                    elevation = 3.dp,
+                    shape = CircleShape,
+                    ambientColor = Color.Black.copy(alpha = 0.3f),
+                    spotColor = Color.Black
+                )
+        ) {
+            Text("Change Circle Name")
+        }
+
+        Button(
+            onClick = onRemoveClick,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = h2hRemoveRed,
+                contentColor = Color.White
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+                .shadow(
+                    elevation = 3.dp,
+                    shape = CircleShape,
+                    ambientColor = Color.Black.copy(alpha = 0.3f),
+                    spotColor = Color.Black
+                )
+        ) {
+            Text("Remove Circle")
+        }
+    }
+}
+
+@Composable
+fun RenameCirclePopup(
+    currentName: String,
+    onDismiss: () -> Unit,
+    onSubmit: (String) -> Unit
+) {
+    var newName by remember { mutableStateOf(currentName) }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(25.dp),
+            color = Color.White,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(20.dp)
+            ) {
+                Text(
+                    "Rename Circle",
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(bottom = 15.dp)
+                )
+
+                OutlinedTextField(
+                    value = newName,
+                    onValueChange = { newName = it },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = h2hPink,
+                        unfocusedBorderColor = h2hPink
+                    )
+                )
+
+                Button(
+                    onClick = { if (newName.isNotBlank()) onSubmit(newName) },
+                    colors = ButtonDefaults.buttonColors(containerColor = h2hPink),
+                    modifier = Modifier
+                        .padding(top = 20.dp)
+                        .fillMaxWidth()
+                ) {
+                    Text("Submit")
+                }
+            }
         }
     }
 }
@@ -280,8 +526,18 @@ fun CirclesHeader() {
 @Composable
 fun MyCircles(
     viewmodel: h2hViewmodel,
-    newCircleBtn: () -> Unit
+    newCircleBtn: () -> Unit,
+    onAddContactClick: () -> Unit,
+    onContactSettingsClick: (String, Circle) -> Unit,
+    onCircleSettingsClick: (Circle) -> Unit
 ) {
+
+    LaunchedEffect(Unit) {
+        if (viewmodel.circles.isEmpty()) {
+            testCircles(viewmodel)
+        }
+    }
+
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -320,50 +576,36 @@ fun MyCircles(
         }
     }
 
-    if (viewmodel.circles.isEmpty()) {
-        Button(
-            onClick = {testCircles(viewmodel)}
-        ) {
-            Text("Test")
-        }
-    }
-
 
     viewmodel.circles.forEach { circle ->
         CircleList(
-            circleName = circle.name,
-            contactsList = circle.friends,
-            isListExtended = circle.isListExtended.value,
-            onExpandClick = { circle.isListExtended.value = it }
+            circle = circle,
+            onExpandClick = { circle.isListExtended.value = it },
+            onAddContactClick = {
+                viewmodel.selectedCircle = circle
+                onAddContactClick()
+            },
+            onContactSettingsClick = { contactName ->
+                onContactSettingsClick(contactName, circle)
+            },
+            onCircleSettingsClick = {
+                onCircleSettingsClick(circle)
+            }
         )
     }
-
-
-//@Preview
-//@Composable
-//fun CircleListPREVIEW(){
-//    var isListExtended by remember { mutableStateOf(true) }
-//
-//    CircleList(
-//        circleName = "Placeholder",
-//        contactsList = circle1ContactsList,
-//        isListExtended = isListExtended,
-//        onExpandClick = {isListExtended = it}
-//    )
-
-
-
 }
 
 
 @Composable
 fun CircleList(
-    circleName: String = "Hello World",
-    contactsList: MutableList<String>,
-    isListExtended: Boolean,
-    onExpandClick: (Boolean) -> Unit
+    circle: Circle,
+    onExpandClick: (Boolean) -> Unit,
+    onAddContactClick: () -> Unit,
+    onContactSettingsClick: (String) -> Unit,
+    onCircleSettingsClick: () -> Unit
 ) {
-    val amountOfContacts = contactsList.size
+    val amountOfContacts = circle.friends.size
+    val isListExtended = circle.isListExtended.value
 
     var isSwitchActive by remember { mutableStateOf(true) }
 
@@ -396,7 +638,7 @@ fun CircleList(
                 .padding(start = 20.dp, end = 8.dp, top = 3.dp)
         ) {
             Text(
-                circleName,
+                circle.name,
                 fontSize = 20.sp,
                 modifier = Modifier
                     .weight(3f)
@@ -426,13 +668,19 @@ fun CircleList(
         )
 
         // Contacts list
-        contactsList.forEach { contact ->
-            ContactListItem(contact)
+        circle.friends.forEach { contact ->
+            ContactListItem(
+                contactName = contact,
+                onMoreSettingsClick = { onContactSettingsClick(contact) }
+            )
         }
 
         // Bottom buttons
         CircleListSettingsBar(
-            onExpandClick = { onExpandClick( !isListExtended ) }
+            onExpandClick = { onExpandClick( !isListExtended ) },
+            onAddContactClick = onAddContactClick,
+            isListExtended = isListExtended,
+            onCircleSettingsClick = onCircleSettingsClick
         )
     }
 }
@@ -440,7 +688,10 @@ fun CircleList(
 
 @Composable
 fun CircleListSettingsBar(
-    onExpandClick: () -> Unit
+    onExpandClick: () -> Unit,
+    onAddContactClick: () -> Unit,
+    isListExtended: Boolean,
+    onCircleSettingsClick: () -> Unit
 ){
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
@@ -454,7 +705,7 @@ fun CircleListSettingsBar(
             btnText = "More Settings",
             btnIcon = Icons.Rounded.MoreHoriz,
             modifier = Modifier.weight(3f),
-            onPressAction = {/*TODO*/}
+            onPressAction = onCircleSettingsClick
         )
 
         VerticalDivider(
@@ -479,7 +730,8 @@ fun CircleListSettingsBar(
             btnText = "Add to Circle",
             btnIcon = Icons.Rounded.AddCircleOutline,
             modifier = Modifier.weight(3f),
-            onPressAction = {/*TODO*/}
+            onPressAction = onAddContactClick,
+            enabled = isListExtended
         )
     }
 }
@@ -490,15 +742,18 @@ fun ContactListBtn(
     btnText: String = "",
     btnIcon: ImageVector,
     modifier: Modifier,
-    onPressAction: () -> Unit
+    onPressAction: () -> Unit,
+    enabled: Boolean = true
 ){
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
+            .alpha(if (enabled) 1f else 0.5f)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = null
+                indication = null,
+                enabled = enabled
             ) {
                 onPressAction()
             }
@@ -521,7 +776,8 @@ fun ContactListBtn(
 
 @Composable
 fun ContactListItem(
-    contactName: String
+    contactName: String,
+    onMoreSettingsClick: () -> Unit
 ){
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -555,7 +811,7 @@ fun ContactListItem(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null
                 ) {
-                    /*TODO*/
+                    onMoreSettingsClick()
                 }
         )
     }
