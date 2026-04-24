@@ -20,10 +20,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.material.icons.rounded.KeyboardDoubleArrowDown
 import androidx.compose.material.icons.rounded.KeyboardDoubleArrowUp
@@ -32,6 +32,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.HorizontalDivider
@@ -45,6 +47,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -81,6 +84,19 @@ val circle2ContactsList: MutableList<String> = mutableListOf(
     "Mathilde",
     "Ida",
     "Sofie"
+)
+
+val otherContactsList: MutableList<String> = mutableListOf(
+    "Magnus",
+    "Lærke",
+    "Mads",
+    "Alba",
+    "Valdemar",
+    "Agnete",
+    "Rasmus",
+    "Sille",
+    "Mikkel",
+    "Frederikke"
 )
 
 
@@ -163,7 +179,7 @@ fun CirclesHome(
         if (showContactPopup) {
             ModalBottomSheet(
                 onDismissRequest = { showContactPopup = false },
-                sheetState = rememberModalBottomSheetState(),
+                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
                 containerColor = Color.White
             ) {
                 ContactPopupLayout(
@@ -297,13 +313,19 @@ fun ContactPopupLayout(
     viewmodel: h2hViewmodel,
     onContactAdded: () -> Unit = {}
 ){
-    var contactName by remember { mutableStateOf("") }
+    var searchQuery by remember { mutableStateOf("") }
+    val selectedContacts = remember { mutableStateListOf<String>() }
+
+    val filteredContacts = otherContactsList.filter {
+        it.contains(searchQuery, ignoreCase = true)
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 50.dp, start = 20.dp, end = 20.dp)
+            .fillMaxHeight(0.8f)
+            .padding(bottom = 20.dp, start = 20.dp, end = 20.dp)
     ) {
         Text(
             "Add your contacts to your circle!",
@@ -312,10 +334,10 @@ fun ContactPopupLayout(
         )
 
         OutlinedTextField(
-            value = contactName,
-            onValueChange = { contactName = it },
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
             placeholder = {
-                Text("e.g. Kathrine...", color = Color.Black)
+                Text("Search contacts...", color = Color.Black)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -333,15 +355,36 @@ fun ContactPopupLayout(
             singleLine = true
         )
 
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(vertical = 10.dp)
+        ) {
+            items(filteredContacts) { contact ->
+                ContactSelectionItem(
+                    contactName = contact,
+                    isSelected = selectedContacts.contains(contact),
+                    onCheckedChange = { isChecked ->
+                        if (isChecked) {
+                            selectedContacts.add(contact)
+                        } else {
+                            selectedContacts.remove(contact)
+                        }
+                    }
+                )
+            }
+        }
+
         Button(
             onClick = {
-                if (contactName.isNotBlank()) {
-                    viewmodel.selectedCircle?.friends?.add(contactName)
+                if (selectedContacts.isNotEmpty()) {
+                    viewmodel.selectedCircle?.friends?.addAll(selectedContacts)
                     onContactAdded()
                 }
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFFE77B7),
+                containerColor = h2hPink,
                 contentColor = Color(0xFFFFFFFF)
             ),
             modifier = Modifier
@@ -354,9 +397,37 @@ fun ContactPopupLayout(
                 )
         ) {
             Text(
-                "Add contact"
+                "Add selected contacts"
             )
         }
+    }
+}
+
+@Composable
+fun ContactSelectionItem(
+    contactName: String,
+    isSelected: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onCheckedChange(!isSelected) }
+            .padding(vertical = 8.dp, horizontal = 10.dp)
+    ) {
+        Checkbox(
+            checked = isSelected,
+            onCheckedChange = onCheckedChange,
+            colors = CheckboxDefaults.colors(
+                checkedColor = h2hPink
+            )
+        )
+        Text(
+            text = contactName,
+            fontSize = 18.sp,
+            modifier = Modifier.padding(start = 10.dp)
+        )
     }
 }
 
@@ -705,7 +776,8 @@ fun CircleListSettingsBar(
             btnText = "More Settings",
             btnIcon = Icons.Rounded.MoreHoriz,
             modifier = Modifier.weight(3f),
-            onPressAction = onCircleSettingsClick
+            onPressAction = onCircleSettingsClick,
+            enabled = isListExtended
         )
 
         VerticalDivider(
@@ -717,7 +789,8 @@ fun CircleListSettingsBar(
         ContactListBtn(
             btnIcon = Icons.Rounded.KeyboardDoubleArrowUp,
             modifier = Modifier.weight(1f),
-            onPressAction = onExpandClick
+            onPressAction = onExpandClick,
+            enabled = isListExtended
         )
 
         VerticalDivider(
@@ -745,18 +818,21 @@ fun ContactListBtn(
     onPressAction: () -> Unit,
     enabled: Boolean = true
 ){
+    val clickableModifier = if (enabled) {
+        Modifier.clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null
+        ) {
+            onPressAction()
+        }
+    } else Modifier
+
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .alpha(if (enabled) 1f else 0.5f)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                enabled = enabled
-            ) {
-                onPressAction()
-            }
+            .then(clickableModifier)
     ) {
         Icon(
             imageVector = btnIcon,
