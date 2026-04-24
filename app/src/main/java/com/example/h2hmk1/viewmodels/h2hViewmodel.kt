@@ -27,7 +27,9 @@ class h2hViewmodel: ViewModel() {
 
 // Data model for a Circle
 class Circle(
-    val name: String,
+    name: String,
     val isListExtended: MutableState<Boolean> = mutableStateOf(false),
     val friends: MutableList<String> = mutableStateListOf()
-)
+) {
+    var name: String by mutableStateOf(name)
+}

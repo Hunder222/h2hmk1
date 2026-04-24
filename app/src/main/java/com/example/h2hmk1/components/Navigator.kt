@@ -58,7 +58,6 @@ fun Navigator(
         composable("circles-home"){
             CirclesHome(
                 viewmodel,
-                newCircleBtn = {navController.navigate("new-circle-popup")},
                 createJamBtn = {navController.navigate("jam-create")},
                 joinJamBtn = {navController.navigate("jam-join")}
             )
@@ -70,12 +69,6 @@ fun Navigator(
         composable("jam-join"){
             JamJoin()
         }
-        composable("new-circle-popup"){
-            CirclePopupLayout(
-                viewmodel
-            )
-        }
-
     }
 }
 
